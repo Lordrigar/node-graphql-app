@@ -1,0 +1,5 @@
+data-mongodb/
+node_modules/
+app/.env
+coverage/
+mongodb-binaries/

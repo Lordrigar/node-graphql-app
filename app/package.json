@@ -1,0 +1,73 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "express-status-monitor": "^1.3.3",
+    "graphql": "^14.5.8",
+    "graphql-depth-limit": "^1.1.0",
+    "helmet": "^3.21.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.8.4",
+    "node-gyp": "^6.1.0",
+    "nodemon": "^2.0.2",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "pm2": "^4.4.0"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-import": "^2.20.0",
+    "jest": "^24.9.0",
+    "lint-staged": "^9.5.0",
+    "mongodb-memory-server": "^6.2.1",
+    "prettier": "^1.19.1"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      },
+      "collectCoverageFrom": [
+        "!**/coverage/**",
+        "!**/tests/**",
+        "!**/schema/**",
+        "!**/models/**"
+      ]
+    }
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true
+  },
+  "lint-staged": {
+    "*.{js, json}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "pm2": "pm2-runtime start index.js -i 0 --name my-api",
+    "pm2:dev": "pm2-dev start index.js",
+    "debug": "node debug index.js",
+    "test": "./node_modules/.bin/jest --runInBand --setupTestFrameworkScriptFile=\"<rootDir>/tests/setup.js\" --detectOpenHandles --testEnvironment node .",
+    "lint": "./node_modules/.bin/eslint .",
+    "make-pretty": "./node_modules/.bin/prettier --write \"**/*.{js, json}\""
+  },
+  "author": "",
+  "license": "ISC"
+}
