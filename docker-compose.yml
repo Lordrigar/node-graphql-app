@@ -18,9 +18,10 @@ services:
     volumes:
       - './data-mongodb/:/data/db'
       - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - './fixtures/:/fixtures'
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE: mongodb
+      MONGO_INITDB_DATABASE: mymongo
     ports:
       - '27017:27017'

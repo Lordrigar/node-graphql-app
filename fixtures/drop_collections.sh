@@ -1,0 +1,1 @@
+cd .. && docker-compose exec mongo mongo mymongo -u user -p password /fixtures/drop_collections.js

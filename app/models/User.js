@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 const bcpryt = require('bcryptjs');
+const shortid = require('shortid');
 
 const userSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: shortid.generate(),
+    required: true,
+  },
   name: String,
   password: String,
   books: [String],
@@ -13,7 +19,7 @@ userSchema.methods.getName = function getName() {
 
 userSchema.methods.getBooks = async function getBooks() {
   return Promise.all(
-    this.books.map(bookId => {
+    this.books.map((bookId) => {
       return this.model('Book').findById(bookId);
     }),
   );

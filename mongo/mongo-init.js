@@ -1,4 +1,4 @@
-db = db.getSiblingDB('mongodb')
+db = db.getSiblingDB('mymongo');
 
 db.createUser({
   user: 'user',
@@ -6,9 +6,7 @@ db.createUser({
   roles: [
     {
       role: 'readWrite',
-      db: 'mongodb',
+      db: 'mymongo',
     },
   ],
 });
-
-db.createCollection("test");
