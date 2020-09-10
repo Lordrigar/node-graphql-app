@@ -2,7 +2,7 @@
   "name": "app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app/index.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -60,12 +60,12 @@
     ]
   },
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "pm2": "pm2-runtime start index.js -i 0 --name my-api",
-    "pm2:dev": "pm2-dev start index.js",
-    "debug": "node debug index.js",
-    "test": "./node_modules/.bin/jest --runInBand --setupTestFrameworkScriptFile=\"<rootDir>/tests/setup.js\" --detectOpenHandles --testEnvironment node .",
+    "start": "node app/index.js",
+    "dev": "nodemon app/index.js",
+    "pm2": "pm2-runtime start app/index.js -i 0 --name my-api",
+    "pm2:dev": "pm2-dev start app/index.js",
+    "debug": "node debug app/index.js",
+    "test": "./node_modules/.bin/jest --runInBand --setupTestFrameworkScriptFile=\"<rootDir>/app/tests/setup.js\" --detectOpenHandles --testEnvironment node .",
     "lint": "./node_modules/.bin/eslint .",
     "make-pretty": "./node_modules/.bin/prettier --write \"**/*.{js, json}\""
   },
