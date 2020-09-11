@@ -27,23 +27,16 @@ jobs:
       - run: npm test
   docker:
     runs-on: ubuntu-latest
+    name: Publish docker image
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Publish image
+        uses: docker/build-push-action@v1
         with:
+          registry: docker.pkg.github.com
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: lordrigar/node-graphql-app:latest
-          secrets: |
-            GIT_AUTH_TOKEN=${{ github.token }}
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          repository: lordrigar/node-graphql-app
+          tag_with_ref: true
+          tag_with_sha: true
