@@ -33,6 +33,5 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          registry: hub.docker.com
           repository: lordrigar/node-graphql-app
           tags: v1
