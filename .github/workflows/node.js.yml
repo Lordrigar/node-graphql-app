@@ -29,10 +29,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       ‐ name: build-push
-      uses: docker/build-push-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-        registry: hub.docker.com
-        repository: lordrigar/node-graphql-app
-        tags: v1
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: hub.docker.com
+          repository: lordrigar/node-graphql-app
+          tags: v1
