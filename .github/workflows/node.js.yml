@@ -28,10 +28,12 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: build-push
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          dockerfile: Dockerfile
           repository: lordrigar/node-graphql-app
           tags: v1
