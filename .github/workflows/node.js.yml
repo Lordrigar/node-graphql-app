@@ -28,7 +28,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      ‐ name: build-push
+      - name: build-push
         uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
