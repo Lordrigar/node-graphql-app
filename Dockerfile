@@ -1,15 +1,17 @@
 FROM node:12.0.0-alpine
 
-COPY package.json /usr/src/package.json
-
-COPY package-lock.json /usr/src/package-lock.json
-
 WORKDIR /usr/src
+
+COPY package.json ./
+
+COPY package-lock.json ./
 
 RUN npm ci
 
+RUN npm i pm2 -g
+
 COPY . .
 
-RUN npm install pm2 -g
+EXPOSE 3000
 
-RUN npm run pm2
+CMD ["pm2", "app/index.js"]

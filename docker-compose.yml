@@ -6,7 +6,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./app/:/usr/src/app/
-      - ./node_modules:/usr/src/node_modules
     working_dir: /usr/src
     command: npm run pm2:dev
     ports:
