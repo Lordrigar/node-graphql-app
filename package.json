@@ -19,7 +19,6 @@
     "nodemon": "^2.0.2",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
-    "pm2": "^4.4.0",
     "shortid": "^2.2.15"
   },
   "devDependencies": {
@@ -62,8 +61,6 @@
   "scripts": {
     "start": "node app/index.js",
     "dev": "nodemon app/index.js",
-    "pm2": "pm2-runtime start app/index.js -i 0 --name my-api",
-    "pm2:dev": "pm2-dev start app/index.js",
     "debug": "node debug app/index.js",
     "test": "./node_modules/.bin/jest --runInBand --setupTestFrameworkScriptFile=\"<rootDir>/app/tests/setup.js\" --detectOpenHandles --testEnvironment node .",
     "lint": "./node_modules/.bin/eslint .",

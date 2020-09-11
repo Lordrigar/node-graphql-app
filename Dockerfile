@@ -8,10 +8,8 @@ COPY package-lock.json ./
 
 RUN npm ci
 
-RUN npm i pm2 -g
-
 COPY . .
 
 EXPOSE 3000
 
-CMD ["pm2", "app/index.js"]
+CMD ["node", "app/index.js"]
