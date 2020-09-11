@@ -15,11 +15,24 @@ const { User } = require('./models');
 
 dotenv.config();
 
-const startApp = async () => {
-  await mongoose.connect(process.env.DB, { useNewmoUrlParser: true });
-  const db = mongoose.connection;
+const connect = () => {
+  mongoose.connect(process.env.DB, {
+    useNewUrlParser: true,
+    reconnectTries: Number.MAX_VALUE,
+    reconnectInterval: 500,
+    poolSize: 10,
+  });
+};
 
-  db.on('error', console.error.bind(console, 'MongoDB connection error'));
+const startApp = async () => {
+  connect();
+
+  mongoose.connection.on('error', e => {
+    console.log('[MongoDB] Something went super wrong!', e);
+    setTimeout(() => {
+      connect();
+    }, 5000);
+  });
 
   const app = express();
 
