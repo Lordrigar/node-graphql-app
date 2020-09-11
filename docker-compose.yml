@@ -3,7 +3,7 @@ services:
   node:
     build:
       context: .
-      dockerfile: Dockerfile-node
+      dockerfile: Dockerfile
     volumes:
       - ./app/:/usr/src/app/
       - ./node_modules:/usr/src/node_modules
