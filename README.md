@@ -1,3 +1,4 @@
+![Node.js CI](https://github.com/Lordrigar/node-graphql-app/workflows/Node.js%20CI/badge.svg?branch=master)
 # Node and graphql app
 
 Skeleton app for graphql setup, including mongo memory db, testing setup and auth with passport. There are currently two graphql routes.  
