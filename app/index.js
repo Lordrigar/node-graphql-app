@@ -29,7 +29,7 @@ const connect = () => {
 const startApp = async () => {
   connect();
 
-  mongoose.connection.on('error', e => {
+  mongoose.connection.on('error', (e) => {
     console.log('[MongoDB] Something went super wrong!', e);
     setTimeout(() => {
       connect();
@@ -66,6 +66,10 @@ const startApp = async () => {
   app.use(helmet());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+
+  app.get('/', function (req, res) {
+    res.send('Website under construction, be back shortly!');
+  });
 
   app.use(
     '/public',
