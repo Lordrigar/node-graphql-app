@@ -37,6 +37,8 @@ jobs:
       #     dockerfile: Dockerfile
       #     repository: lordrigar/node-graphql-app
       #     tags: v1
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -50,6 +52,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          file: Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
           tags: lordrigar/node-graphql-app
