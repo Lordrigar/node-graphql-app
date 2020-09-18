@@ -24,6 +24,7 @@ jobs:
       - run: npm ci
       - run: npm test
   dockerhub:
+    needs: test
     name: push to dockerhub registry
     runs-on: ubuntu-latest
     steps:
@@ -47,6 +48,7 @@ jobs:
           push: true
           tags: lordrigar/node-graphql-app
   deploy:
+    needs: test
     name: Deploy to DO
     runs-on: ubuntu-latest
     steps:
@@ -58,5 +60,4 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            whoami
-            ls -la
+            cd ${{ secrets.PATH }} && rm -rf . && git clone https://github.com/Lordrigar/node-graphql-app.git && ./build.sh
