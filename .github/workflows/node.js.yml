@@ -60,4 +60,4 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd ${{ secrets.PATH }} && rm -rf ${{ secrets.PATH }}/*
+            cd ${{ secrets.PATH }} && rm -rf ${{ secrets.PATH }}/* && git clone https://github.com/Lordrigar/node-graphql-app.git . && ./build.sh
