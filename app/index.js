@@ -68,9 +68,7 @@ const startApp = async () => {
   app.use(bodyParser.json());
 
   app.get('/', function (req, res) {
-    res.send(
-      'Website under construction, be back shortly! Deployment test :)!',
-    );
+    res.send('Website under construction, be back shortly!');
   });
 
   app.use(
