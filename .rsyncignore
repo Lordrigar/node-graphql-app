@@ -2,3 +2,7 @@ data-mongodb/
 node_modules/
 .env
 app/node_modules/
+.git
+.env.example
+.github
+.rsyncignore
