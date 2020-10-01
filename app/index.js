@@ -1,6 +1,6 @@
+const os = require('os');
 const express = require('express');
 const expressGraphql = require('express-graphql');
-const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const publicSchema = require('./schema/publicSchema');
 const privateSchema = require('./schema/privateSchema');
@@ -38,9 +38,6 @@ const startApp = async () => {
 
   const app = express();
 
-  // navigate to localhost:3000/status for monitor
-  app.use(require('express-status-monitor')({ path: '/status' }));
-
   passport.use(
     new JwtStrategy(
       {
@@ -67,8 +64,13 @@ const startApp = async () => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
+  // navigate to localhost:3000/status for monitor
+  app.use(require('express-status-monitor')({ path: '/status' }));
+
   app.get('/', function (req, res) {
-    res.send('Website under construction, be back shortly!');
+    res.send(
+      `Website under construction, be back shortly! Host: ${os.hostname()}`,
+    );
   });
 
   app.use(
