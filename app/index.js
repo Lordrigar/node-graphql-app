@@ -1,8 +1,8 @@
 const os = require('os');
-const winston = require('winston');
 const express = require('express');
 const expressGraphql = require('express-graphql');
 const mongoose = require('mongoose');
+const { logger } = require('logger');
 const publicSchema = require('./schema/publicSchema');
 const privateSchema = require('./schema/privateSchema');
 const depthLimit = require('graphql-depth-limit');
@@ -17,23 +17,6 @@ const { User } = require('./models');
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
-
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  defaultMeta: { service: 'user-service' },
-  transports: [
-    //
-    // - Write all logs with level `error` and below to `error.log`
-    // - Write all logs with level `info` and below to `combined.log`
-    //
-    new winston.transports.File({
-      filename: './logs/error.log',
-      level: 'error',
-    }),
-    new winston.transports.File({ filename: './logs/combined.log' }),
-  ],
-});
 
 logger.info(`DB ${process.env.DB}`);
 
@@ -88,6 +71,7 @@ const startApp = async () => {
   app.use(require('express-status-monitor')({ path: '/status' }));
 
   app.get('/', function(req, res) {
+    logger.info('reached new endpoint');
     res.send(
       `Website under construction, be back shortly! Host: ${os.hostname()}`,
     );
