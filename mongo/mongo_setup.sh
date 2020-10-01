@@ -21,31 +21,27 @@ docker exec $(docker ps -aqf "name=mongo1") mongo --eval '
         "host": "mongo3:27017",
         "priority": 0
       },
-    ]})
-'
+    ]});
 
-docker exec $(docker ps -aqf "name=mongo1") mongo --eval '
-admin = db.getSiblingDB("admin")
-admin.createUser(
-  {
-    user: "root",
-    pwd: "admin",
-    roles: [ { role: "root", db: "admin" } ]
-  }
-)
-'
+    admin = db.getSiblingDB("admin");
+    admin.createUser(
+      {
+        user: "root",
+        pwd: "admin",
+        roles: [ { role: "root", db: "admin" } ]
+      }
+    );
 
-docker exec $(docker ps -aqf "name=mongo1") mongo --eval '
-use admin
-db.createUser(
-  {
-    user: "user",
-    pwd: "password",
-    roles:
-    [
-      { role: "readWrite", db: "mymongo" }
-    ],
-    mechanisms: [ "SCRAM-SHA-1" ] 
-  }
-)
+    use admin;
+    db.createUser(
+    {
+      user: "user",
+      pwd: "password",
+      roles:
+      [
+        { role: "readWrite", db: "mymongo" }
+      ],
+      mechanisms: [ "SCRAM-SHA-1" ] 
+    }
+  );
 '
