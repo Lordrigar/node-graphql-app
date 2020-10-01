@@ -22,8 +22,11 @@ docker exec $(docker ps -aqf "name=mongo1") mongo --eval '
         "priority": 0
       },
     ]});
-'
-echo 'setup admin account'
+';
+
+sleep 10
+
+echo 'setup admin account';
 docker exec $(docker ps -aqf "name=mongo1") mongo --eval '
 admin = db.getSiblingDB("admin")
 admin.createUser(
@@ -33,8 +36,11 @@ admin.createUser(
     roles: [ { role: "root", db: "admin" } ]
   }
 )
-'
-echo 'setup user'
+';
+
+sleep 10;
+
+echo 'setup user';
 docker exec $(docker ps -aqf "name=mongo1") mongo --eval '
 db.createUser(
   {
