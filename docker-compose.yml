@@ -1,0 +1,35 @@
+version: '3'
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./app/:/usr/src/app/
+    env_file:
+      - ./../.env
+    working_dir: /usr/src
+    command: npm run dev
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo
+    deploy:
+      replicas: 2
+  mongo:
+    image: mongo:4.0
+    volumes:
+      # - './data-mongodb/:/data/db'
+      - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - './fixtures/:/fixtures'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: mymongo
+    ports:
+      - '27017:27017'
+    deploy:
+      mode: replicated
+      replicas: 2
+      placement:
+        constrains: [node.role == manager]

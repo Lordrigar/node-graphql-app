@@ -4,3 +4,4 @@ node_modules/
 coverage/
 mongodb-binaries/
 deploy.sh
+deploy_swarm.sh
