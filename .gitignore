@@ -5,3 +5,9 @@ coverage/
 mongodb-binaries/
 deploy.sh
 deploy_swarm.sh
+mongo/mongo-data-1/
+mongo/mongo-data-2/
+mongo/mongo-data-3/
+mongo/mongo-config-1/
+mongo/mongo-config-2/
+mongo/mongo-config-3/

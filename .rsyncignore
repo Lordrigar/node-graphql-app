@@ -1,3 +1,9 @@
+mongo/mongo-config-1/
+mongo/mongo-config-2/
+mongo/mongo-config-3/
+mongo/mongo-data-1/
+mongo/mongo-data-2/
+mongo/mongo-data-3/
 data-mongodb/
 node_modules/
 .env
@@ -6,3 +12,4 @@ app/node_modules/
 .env.example
 .github
 .rsyncignore
+app/logs/

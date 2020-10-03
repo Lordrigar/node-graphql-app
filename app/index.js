@@ -2,6 +2,7 @@ const os = require('os');
 const express = require('express');
 const expressGraphql = require('express-graphql');
 const mongoose = require('mongoose');
+const logger = require('./logger');
 const publicSchema = require('./schema/publicSchema');
 const privateSchema = require('./schema/privateSchema');
 const depthLimit = require('graphql-depth-limit');
@@ -17,20 +18,24 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
+logger.info(`DB ${process.env.DB}`);
+
 const connect = () => {
-  mongoose.connect(process.env.DB, {
+  const options = {
     useNewUrlParser: true,
-    reconnectTries: Number.MAX_VALUE,
-    reconnectInterval: 500,
-    poolSize: 10,
-  });
+    useFindAndModify: false,
+    useCreateIndex: true,
+    replicaSet: 'rs0',
+  };
+
+  mongoose.connect(process.env.DB, options);
 };
 
 const startApp = async () => {
   connect();
 
-  mongoose.connection.on('error', (e) => {
-    console.log('[MongoDB] Something went super wrong!', e);
+  mongoose.connection.on('error', e => {
+    logger.error('[MongoDB] Something went super wrong!', e);
     setTimeout(() => {
       connect();
     }, 5000);
@@ -67,7 +72,8 @@ const startApp = async () => {
   // navigate to localhost:3000/status for monitor
   app.use(require('express-status-monitor')({ path: '/status' }));
 
-  app.get('/', function (req, res) {
+  app.get('/', function(req, res) {
+    logger.info('reached new endpoint');
     res.send(
       `Website under construction, be back shortly! Host: ${os.hostname()}`,
     );
@@ -94,7 +100,7 @@ const startApp = async () => {
   );
 
   app.listen(process.env.PORT, () => {
-    console.log(`Server started on ${process.env.PORT}`);
+    logger.info(`Server started on ${process.env.PORT}`);
   });
 };
 

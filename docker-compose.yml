@@ -4,6 +4,7 @@ services:
     image: lordrigar/node-graphql-app:latest
     volumes:
       - ./app/:/usr/src/app/
+      - ./app/logs/:/usr/src/app/logs/
     env_file:
       - ./../.env
     working_dir: /usr/src
@@ -16,64 +17,50 @@ services:
       - mongo3
     deploy:
       replicas: 2
+    networks:
+      - web
 
   mongo1:
-    hostname: mongo1
-    image: mongo:4.0
-    ports:
-      - 27011:27017
-    entrypoint: ['/usr/bin/mongod', '--bind_ip_all', '--replSet', 'rs0']
+    image: mongo:3.4
+    command: mongod --smallfiles --replSet rs0 --noauth --oplogSize 3
+    environment:
+      TERM: xterm
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./mongo/mongo-data-1/:/data/db/
+      - ./mongo/mongo-config-1/:/data/configdb/
+    networks:
+      - web
+    deploy:
+      replicas: 1
+
   mongo2:
-    hostname: mongo2
-    image: mongo:4.0
-    ports:
-      - 27012:27017
-    entrypoint: ['/usr/bin/mongod', '--bind_ip_all', '--replSet', 'rs0']
+    image: mongo:3.4
+    command: mongod --smallfiles --replSet rs0 --noauth --oplogSize 3
+    environment:
+      TERM: xterm
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./mongo/mongo-data-2/:/data/db/
+      - ./mongo/mongo-config-2/:/data/configdb/
+    networks:
+      - web
+    deploy:
+      replicas: 1
+
   mongo3:
-    hostname: mongo3
-    image: mongo:4.0
-    ports:
-      - 27013:27017
-    entrypoint: ['/usr/bin/mongod', '--bind_ip_all', '--replSet', 'rs0']
+    image: mongo:3.4
+    command: mongod --smallfiles --replSet rs0 --noauth --oplogSize 3
+    environment:
+      TERM: xterm
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./mongo/mongo-data-3/:/data/db/
+      - ./mongo/mongo-config-3/:/data/configdb/
+    networks:
+      - web
+    deploy:
+      replicas: 1
 
-  # mongo1:
-  #   hostname: mongo1
-  #   image: mongo:4.0
-  #   volumes:
-  #     - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-  #     - ./mongo1:/data/db
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: admin
-  #     MONGO_INITDB_ROOT_PASSWORD: admin
-  #     MONGO_INITDB_DATABASE: mymongo
-  #   entrypoint: ['/usr/bin/mongod', '--bind_ip_all', '--replSet', 'rs0']
-
-  # mongo2:
-  #   hostname: mongo2
-  #   image: mongo:4.0
-  #   volumes:
-  #     - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-  #     - ./mongo2:/data/db
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: admin
-  #     MONGO_INITDB_ROOT_PASSWORD: admin
-  #     MONGO_INITDB_DATABASE: mymongo
-  #   entrypoint: ['/usr/bin/mongod', '--bind_ip_all', '--replSet', 'rs0']
-
-  # mongosetup:
-  #   image: mongo:4.0
-  #   links:
-  #     - mongo1:mongo1
-  #     - mongo2:mongo2
-  #   depends_on:
-  #     - mongo1
-  #     - mongo2
-  #   volumes:
-  #     - .:/mongo
-  #   restart: 'no'
-  #   entrypoint: ['bash', '/mongo/mongo_setup.sh']
-  # deploy:
-  #   mode: replicated
-  #   replicas: 2
-  #   placement:
-  #     constraints: [node.role == manager]
+networks:
+  web:
