@@ -10,7 +10,7 @@ services:
     working_dir: /usr/src
     command: npm run start
     ports:
-      - '3000:3000'
+      - 3000:3000
     depends_on:
       - mongo1
       - mongo2
@@ -21,10 +21,8 @@ services:
       - web
 
   mongo1:
-    image: mongo:3.4
-    command: mongod --smallfiles --replSet rs0 --noauth --oplogSize 3
-    environment:
-      TERM: xterm
+    image: mongo:4.0
+    command: mongod --smallfiles --port 27017 --replSet rs0 --oplogSize 3 --bind_ip_all
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./mongo/mongo-data-1/:/data/db/
@@ -35,10 +33,8 @@ services:
       replicas: 1
 
   mongo2:
-    image: mongo:3.4
-    command: mongod --smallfiles --replSet rs0 --noauth --oplogSize 3
-    environment:
-      TERM: xterm
+    image: mongo:4.0
+    command: mongod --smallfiles --port 27011 --replSet rs0 --oplogSize 3 --bind_ip_all
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./mongo/mongo-data-2/:/data/db/
@@ -49,10 +45,8 @@ services:
       replicas: 1
 
   mongo3:
-    image: mongo:3.4
-    command: mongod --smallfiles --replSet rs0 --noauth --oplogSize 3
-    environment:
-      TERM: xterm
+    image: mongo:4.0
+    command: mongod --smallfiles --port 27012 --replSet rs0 --oplogSize 3 --bind_ip_all
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./mongo/mongo-data-3/:/data/db/
