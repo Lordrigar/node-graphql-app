@@ -18,8 +18,6 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-logger.info(`DB ${process.env.DB}`);
-
 const connect = () => {
   const options = {
     useNewUrlParser: true,

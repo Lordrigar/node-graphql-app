@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 30
+sleep 10
 
 echo SETUP.sh time now: `date +"%T" `
 echo "Intializing replica set on master"

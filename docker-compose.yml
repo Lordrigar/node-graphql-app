@@ -22,7 +22,7 @@ services:
 
   mongo1:
     image: mongo:4.0
-    command: mongod --smallfiles --port 27017 --replSet rs0 --oplogSize 3 --bind_ip_all
+    command: mongod --port 27017 --replSet rs0 --oplogSize 3 --bind_ip_all
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./mongo/mongo-data-1/:/data/db/
@@ -34,7 +34,7 @@ services:
 
   mongo2:
     image: mongo:4.0
-    command: mongod --smallfiles --port 27011 --replSet rs0 --oplogSize 3 --bind_ip_all
+    command: mongod --port 27011 --replSet rs0 --oplogSize 3 --bind_ip_all
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./mongo/mongo-data-2/:/data/db/
@@ -46,7 +46,7 @@ services:
 
   mongo3:
     image: mongo:4.0
-    command: mongod --smallfiles --port 27012 --replSet rs0 --oplogSize 3 --bind_ip_all
+    command: mongod --port 27012 --replSet rs0 --oplogSize 3 --bind_ip_all
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./mongo/mongo-data-3/:/data/db/
@@ -55,6 +55,13 @@ services:
       - web
     deploy:
       replicas: 1
+
+  vizualizer:
+    image: dockersamples/visualizer
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    ports:
+      - '8080:8080'
 
 networks:
   web:
