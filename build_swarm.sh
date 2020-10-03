@@ -15,6 +15,8 @@
 # mkdir /var/www/zaorski.co.uk/html/mongo/mongo-data-2
 # mkdir /var/www/zaorski.co.uk/html/mongo/mongo-data-3
 
+docker network create -d overlay --internal mynetwork
+
 docker stack deploy --compose-file=docker-compose.yml myapp
 
 ./mongo/mongo_setup.sh
