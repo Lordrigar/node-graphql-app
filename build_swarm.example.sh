@@ -3,7 +3,7 @@
 docker swarm leave --force
 docker system prune --all --force
 docker image prune --all --force
-docker volume prune --all --force
+docker volume prune --force
 
 docker swarm init --advertise-addr <host>
 
