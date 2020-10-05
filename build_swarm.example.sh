@@ -15,6 +15,8 @@ mkdir /var/www/<folder_path>/html/mongo/mongo-data-1
 mkdir /var/www/<folder_path>/html/mongo/mongo-data-2
 mkdir /var/www/<folder_path>/html/mongo/mongo-data-3
 
+mkdir /var/www/<folder_path>/html/app/logs
+
 docker stack deploy --compose-file=docker-compose.yml myapp
 
 ./mongo/mongo_setup.sh

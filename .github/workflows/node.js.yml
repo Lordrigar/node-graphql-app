@@ -60,7 +60,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd ${{ secrets.PATH }} && ./../build_swarm.sh
+            cd ${{ secrets.PATH }} && ./build_swarm.sh
   # deploy:
   #   needs: dockerhub
   #   name: Deploy to DO
