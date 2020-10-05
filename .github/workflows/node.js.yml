@@ -47,6 +47,20 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: lordrigar/node-graphql-app
+  deploy_swarm:
+    needs: test
+    name: Deploy swarm to DO
+    runs-on: ubuntu-latest
+    steps:
+      - name: execute remote build script
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd ${{ secrets.PATH }} && ls -A1 | xargs rm -rf && git clone https://github.com/Lordrigar/node-graphql-app.git . && chmod +x ./build_swarm.sh && ./build_swarm.sh
   # deploy:
   #   needs: test
   #   name: Deploy to DO
