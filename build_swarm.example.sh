@@ -6,6 +6,7 @@ docker image prune --all --force
 docker volume prune --force
 
 docker swarm init --advertise-addr <host>
+#docker swarm init --advertise-addr 192.168.65.3
 
 mkdir /var/www/<folder_path>/html/mongo/mongo-config-1
 mkdir /var/www/<folder_path>/html/mongo/mongo-config-2
