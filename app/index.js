@@ -9,6 +9,7 @@ const depthLimit = require('graphql-depth-limit');
 const cors = require('cors');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const isAuthenticated = require('./authentication');
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
@@ -23,7 +24,7 @@ const connect = () => {
     useNewUrlParser: true,
     useFindAndModify: false,
     useCreateIndex: true,
-    replicaSet: 'rs0',
+    // replicaSet: 'rs0',
   };
 
   mongoose.connect(process.env.DB, options);
@@ -41,10 +42,19 @@ const startApp = async () => {
 
   const app = express();
 
+  const cookieExtractor = req => {
+    if (req && req.cookies) {
+      return req.cookies['jwt'];
+    }
+
+    return;
+  };
+
   passport.use(
     new JwtStrategy(
       {
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        jwtFromRequest: cookieExtractor,
         secretOrKey: process.env.JWT_SECRET,
       },
       async (jwtPayload, done) => {
@@ -66,6 +76,7 @@ const startApp = async () => {
   app.use(helmet());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+  app.use(cookieParser());
 
   // navigate to localhost:3000/status for monitor
   app.use(require('express-status-monitor')({ path: '/status' }));
@@ -79,11 +90,12 @@ const startApp = async () => {
 
   app.use(
     '/public',
-    expressGraphql({
+    expressGraphql(async ({ req, res }) => ({
       schema: publicSchema,
+      rootValue: { req, res },
       graphiql: true,
       validationRules: [depthLimit(6)],
-    }),
+    })),
   );
 
   app.use(

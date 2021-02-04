@@ -75,9 +75,9 @@ const LoginType = new GraphQLObjectType({
     user: {
       type: AuthorType,
     },
-    token: {
-      type: new GraphQLNonNull(GraphQLString),
-    },
+    // token: {
+    //   type: new GraphQLNonNull(GraphQLString),
+    // },
   },
 });
 

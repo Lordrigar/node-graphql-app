@@ -68,7 +68,7 @@ const mutations = {
         type: new GraphQLNonNull(GraphQLString),
       },
     },
-    resolve: async (_, { name, password }) => {
+    resolve: async ({ res }, { name, password }) => {
       const user = await models.User.findOne({ name });
 
       if (!user) {
@@ -81,11 +81,15 @@ const mutations = {
         throw new Error('Login incorrect');
       }
 
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: 60 * 60 * 24,
+      });
+
+      res.cookie('jwt', token);
+
       return {
         user,
-        token: jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: 60 * 60 * 24,
-        }),
+        // token,
       };
     },
   },
