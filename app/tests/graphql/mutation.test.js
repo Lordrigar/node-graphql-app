@@ -19,17 +19,16 @@ describe('Login', () => {
              id
             name
           }
-          token
         }
       }
     `;
 
-    const { data } = await graphql(
-      schema,
-      mutation,
-    );
+    // Mock response object with cookie method
+    const { data, errors } = await graphql(schema, mutation, {
+      res: { cookie: () => {} },
+    });
 
+    expect(errors).toBeFalsy();
     expect(data.login.user.id).toBe(user._id.toString());
-    expect(typeof data.login.token).toBe('string');
   });
 });
