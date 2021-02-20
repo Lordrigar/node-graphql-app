@@ -49,28 +49,6 @@ const room2 = {
   updatedAt: new Date(),
 };
 
-const notification = {
-  _id: 'notificationId',
-  type: 'friendInvite',
-  receiver: 'userId',
-  requester: 'userId2',
-  message: 'Yo bro, add me to friends',
-  isRead: false,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
-const notification2 = {
-  _id: 'notificationId2',
-  type: 'roomAccess',
-  receiver: 'roomId1',
-  requester: 'userId3',
-  message: 'Yo bro, add me to Javascript room plz',
-  isRead: true,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
 const roomConversation = {
   _id: 'roomConversation',
   roomId: 'roomId2',
@@ -141,7 +119,6 @@ const message4 = {
 
 db.users.insertMany([user, user2, user3]);
 db.rooms.insertMany([room, room2]);
-db.notifications.insertMany([notification, notification2]);
 db.roomConversations.insertMany([roomConversation, roomConversation2]);
 db.conversations.insertMany([conversation, conversation2]);
 db.messages.insertMany([message, message2, message3, message4]);
