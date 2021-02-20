@@ -1,46 +1,43 @@
-const os = require('os');
 const express = require('express');
-const expressGraphql = require('express-graphql');
-const mongoose = require('mongoose');
-const logger = require('./logger');
-const publicSchema = require('./schema/publicSchema');
-const privateSchema = require('./schema/privateSchema');
-const depthLimit = require('graphql-depth-limit');
+const { ApolloServer } = require('apollo-server-express');
 const cors = require('cors');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
+const { Strategy: JwtStrategy } = require('passport-jwt');
+const socket = require('socket.io');
+const moment = require('moment');
+
 const isAuthenticated = require('./authentication');
-const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const { User } = require('./models');
+const connection = require('./services/db');
+const schema = require('./schema/schema');
+const handleSocket = require('./services/handleSocket');
+const logger = require('./logger');
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
-
-const connect = () => {
-  const options = {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-    // replicaSet: 'rs0',
-  };
-
-  mongoose.connect(process.env.DB, options);
-};
+const port = process.env.PORT || 3000;
 
 const startApp = async () => {
-  connect();
-
-  mongoose.connection.on('error', e => {
-    logger.error('[MongoDB] Something went super wrong!', e);
-    setTimeout(() => {
-      connect();
-    }, 5000);
-  });
-
+  connection();
   const app = express();
+
+  app.use(
+    cors({
+      origin: 'http://localhost:4000', // Client
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization'],
+    }),
+  );
+  app.use(
+    helmet({
+      contentSecurityPolicy:
+        process.env.NODE_ENV === 'production' ? undefined : false,
+    }),
+  );
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+  app.use(cookieParser());
 
   const cookieExtractor = req => {
     if (req && req.cookies) {
@@ -53,7 +50,6 @@ const startApp = async () => {
   passport.use(
     new JwtStrategy(
       {
-        // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         jwtFromRequest: cookieExtractor,
         secretOrKey: process.env.JWT_SECRET,
       },
@@ -72,45 +68,44 @@ const startApp = async () => {
     ),
   );
 
-  app.use(cors());
-  app.use(helmet());
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
-  app.use(cookieParser());
-
-  // navigate to localhost:3000/status for monitor
-  app.use(require('express-status-monitor')({ path: '/status' }));
-
-  app.get('/', function(req, res) {
-    logger.info('reached new endpoint');
-    res.send(
-      `Website under construction, be back shortly! Host: ${os.hostname()}`,
-    );
+  const server = new ApolloServer({
+    schema,
+    context: ({ req, res }) => {
+      const user = req.user;
+      req.user = null;
+      return {
+        req,
+        res,
+        user,
+      };
+    },
+    playground: process.env.NODE_ENV !== 'production',
   });
 
-  app.use(
-    '/public',
-    expressGraphql(async ({ req, res }) => ({
-      schema: publicSchema,
-      rootValue: { req, res },
-      graphiql: true,
-      validationRules: [depthLimit(6)],
-    })),
-  );
+  app.use(isAuthenticated());
 
-  app.use(
-    '/private',
-    isAuthenticated(),
-    expressGraphql(async ({ user, authorization }) => ({
-      schema: privateSchema,
-      rootValue: { user, authorization },
-      validationRules: [depthLimit(3)],
-      context: { user, authorization },
-    })),
-  );
+  server.applyMiddleware({
+    app,
+    path: '/graphql',
+    cors: false,
+  });
 
-  app.listen(process.env.PORT, () => {
-    logger.info(`Server started on ${process.env.PORT}`);
+  const httpServer = app.listen(port, () => {
+    logger.info(`Server started on ${port}`);
+  });
+
+  // Init Websockets
+  const io = socket(httpServer, {
+    cors: {
+      origin: 'http://localhost:4000', // Client
+      methods: ['GET', 'POST'],
+      credentials: true,
+      allowedHeaders: ['Content-Type', 'Authorization', 'jwt'],
+    },
+  });
+
+  io.on('connection', async socket => {
+    await handleSocket(socket);
   });
 };
 

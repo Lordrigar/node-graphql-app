@@ -1,9 +1,13 @@
-const Book = require('./Book');
-const Category = require('./Category');
 const User = require('./User');
+const Room = require('./Room');
+const Message = require('./Message');
+const RoomConversation = require('./RoomConversation');
+const Conversation = require('./Conversation');
 
 module.exports = {
-  Book,
-  Category,
   User,
+  Room,
+  Message,
+  RoomConversation,
+  Conversation,
 };

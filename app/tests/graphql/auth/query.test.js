@@ -1,49 +1,67 @@
-const { graphql } = require('graphql');
 const bcryptjs = require('bcryptjs');
-const models = require('./../../../models');
-const schema = require('./../../../schema/privateSchema');
+const { graphql } = require('graphql');
+const models = require('../../../models');
+const schema = require('../../../schema/schema');
 
-describe('User Auth', () => {
-  let book;
+describe('Rooms', () => {
+  let room;
+  let room2;
   let user;
+  let user2;
+
   beforeEach(async () => {
+    room = new models.Room({
+      _id: 'roomId',
+      topic: 'Javascript',
+      description: 'javascript rulez',
+      owner: 'userId2',
+    });
+
+    room2 = new models.Room({
+      _id: 'roomId2',
+      topic: 'C#',
+      description: 'Unity lovers unite',
+    });
+
+    await room.save();
+    await room2.save();
+
     user = new models.User({
-      name: 'myUser',
+      _id: 'userId',
+      rooms: [room2._id],
       password: await bcryptjs.hash('password', 10),
     });
 
-    book = new models.Book({
-      name: 'This is a new book',
-      author: user._id,
+    user2 = new models.User({
+      _id: 'userId2',
+      name: 'Cool user',
     });
 
     await user.save();
-    await book.save();
+    await user2.save();
   });
 
-  it('should return array of books with author', async () => {
+  it('should return available rooms that user can join', async () => {
     const query = `
     query {
-      user(name: "myUser") {
-        id
-        name
-        password
-        books {
-            name
+      getAvailableRooms {
+        _id
+        topic
+        description
+        owner {
+          name
         }
       }
     }
     `;
 
-    // Have to pass user as root value and context so it can be authenticated, otherwise will not return stuff!
-    const { data } = await graphql(
-      schema,
-      query,
-      { user },
-      { user }
-    );
+    // Have to pass user as context so it can be authenticated, otherwise will not return stuff!
+    const { data, errors } = await graphql(schema, query, {}, { user });
 
-    expect(data.user.id).toBe(user._id.toString());
-    expect(data.user.books.length).toBe(0);
+    expect(errors).toBeFalsy();
+    expect(data.getAvailableRooms[0]._id).toEqual(room._id);
+    expect(data.getAvailableRooms[0].topic).toEqual(room.topic);
+    expect(data.getAvailableRooms[0].description).toEqual(room.description);
+    expect(data.getAvailableRooms[0].owner.name).toEqual(user2.name);
   });
 });

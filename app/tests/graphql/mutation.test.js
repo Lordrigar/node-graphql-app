@@ -1,12 +1,13 @@
 const { graphql } = require('graphql');
 const bcryptjs = require('bcryptjs');
-const models = require('./../../models');
-const schema = require('./../../schema/publicSchema');
+const models = require('../../models');
+const schema = require('../../schema/schema');
 
 describe('Login', () => {
   it('should login the user', async () => {
     const user = new models.User({
       name: 'myUser',
+      email: 'testUser@example.com',
       password: await bcryptjs.hash('password', 10),
     });
 
@@ -14,21 +15,25 @@ describe('Login', () => {
 
     const mutation = `
       mutation {
-        login(name: "myUser", password: "password") {
-          user {
-             id
-            name
-          }
+        loginUser(input: {email: "testUser@example.com", password: "password"}) {
+          email
+          id
+          name
         }
       }
     `;
 
-    // Mock response object with cookie method
-    const { data, errors } = await graphql(schema, mutation, {
-      res: { cookie: () => {} },
-    });
+    // Mock response object with cookie method in context
+    const { data, errors } = await graphql(
+      schema,
+      mutation,
+      {},
+      { res: { cookie: () => {} } },
+    );
 
     expect(errors).toBeFalsy();
-    expect(data.login.user.id).toBe(user._id.toString());
+    expect(data.loginUser.email).toEqual(user.email);
+    expect(data.loginUser.name).toEqual(user.name);
+    expect(data.loginUser.id).toEqual(user._id);
   });
 });
