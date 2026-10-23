@@ -1,5 +1,6 @@
 const express = require('express');
-const { ApolloServer } = require('apollo-server-express');
+const { ApolloServer } = require('@apollo/server');
+const { expressMiddleware } = require('@as-integrations/express5');
 const cors = require('cors');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
@@ -126,27 +127,21 @@ const startApp = async () => {
     ),
   );
 
-  const server = new ApolloServer({
-    schema,
-    context: ({ req, res }) => {
-      const user = req.user;
-      req.user = null;
-      return {
-        req,
-        res,
-        user,
-      };
-    },
-    playground: process.env.NODE_ENV !== 'production',
-  });
+  const server = new ApolloServer({ schema });
+  await server.start();
 
   app.use(isAuthenticated());
 
-  server.applyMiddleware({
-    app,
-    path: '/graphql',
-    cors: false,
-  });
+  app.use(
+    '/graphql',
+    expressMiddleware(server, {
+      context: async ({ req, res }) => {
+        const user = req.user;
+        req.user = null;
+        return { req, res, user };
+      },
+    }),
+  );
 
   const httpServer = app.listen(port, () => {
     logger.info(`Server started on ${port}`);

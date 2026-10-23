@@ -1,26 +1,21 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
-mongoose.set('useCreateIndex', true);
-
 let mongoServer;
 
 process.env.JWT_SECRET = 'jwt_secret';
 
 beforeEach(async () => {
-  mongoServer = new MongoMemoryServer();
-  const mongoUri = await mongoServer.getConnectionString();
+  mongoServer = await MongoMemoryServer.create();
+  const mongoUri = await mongoServer.getUri();
   process.env.DB = mongoUri;
 
-  const mongooseOpts = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  };
-
-  await mongoose.connect(mongoUri, mongooseOpts);
+  await mongoose.connect(mongoUri);
 });
 
 afterEach(async () => {
   await mongoose.disconnect();
-  mongoServer.stop();
+  if (mongoServer) {
+    await mongoServer.stop();
+  }
 });

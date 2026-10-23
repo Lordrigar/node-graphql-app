@@ -1,5 +1,5 @@
-const { gql } = require('apollo-server-express');
-const { makeExecutableSchema } = require('graphql-tools');
+const { gql } = require('graphql-tag');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
 const queryTypes = require('./types/queryTypes');
 const mutationTypes = require('./types/mutationTypes');
 const resolvers = require('./resolvers');

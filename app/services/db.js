@@ -1,13 +1,7 @@
 const mongoose = require('mongoose');
 
 const connectDB = () => {
-  const options = {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-  };
-
-  mongoose.connect(process.env.DB, options);
+  mongoose.connect(process.env.DB);
 };
 
 const connection = () => {
