@@ -6,8 +6,11 @@ let mongoServer;
 process.env.JWT_SECRET = 'jwt_secret';
 
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
-  const mongoUri = await mongoServer.getUri();
+  let mongoUri = process.env.MONGODB_URI;
+  if (!mongoUri) {
+    mongoServer = await MongoMemoryServer.create();
+    mongoUri = await mongoServer.getUri();
+  }
   process.env.DB = mongoUri;
 
   await mongoose.connect(mongoUri);

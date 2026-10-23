@@ -10,6 +10,18 @@ jobs:
   test:
     name: runs testing suite
     runs-on: ubuntu-latest
+    env:
+      MONGODB_URI: mongodb://127.0.0.1:27017/test
+    services:
+      mongodb:
+        image: mongo:8
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     strategy:
       matrix:
@@ -22,7 +34,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm ci --no-audit --no-fund
-      - run: npm run prepare:test-db
       - run: npm test
   dockerhub:
     needs: test
