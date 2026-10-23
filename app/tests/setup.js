@@ -5,7 +5,7 @@ let mongoServer;
 
 process.env.JWT_SECRET = 'jwt_secret';
 
-beforeEach(async () => {
+beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = await mongoServer.getUri();
   process.env.DB = mongoUri;
@@ -13,7 +13,11 @@ beforeEach(async () => {
   await mongoose.connect(mongoUri);
 });
 
-afterEach(async () => {
+beforeEach(async () => {
+  await mongoose.connection.db.dropDatabase();
+});
+
+afterAll(async () => {
   await mongoose.disconnect();
   if (mongoServer) {
     await mongoServer.stop();

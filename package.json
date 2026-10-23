@@ -70,6 +70,7 @@
     "start": "node app/index.js",
     "dev": "nodemon app/index.js",
     "debug": "node debug app/index.js",
+    "prepare:test-db": "node app/tests/prepare-memory-server.js",
     "test": "./node_modules/.bin/jest --runInBand --detectOpenHandles --testEnvironment node .",
     "lint": "./node_modules/.bin/eslint .",
     "make-pretty": "./node_modules/.bin/prettier --write \"**/*.{js, json}\""
