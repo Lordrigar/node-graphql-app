@@ -1,4 +1,3 @@
-version: '3'
 services:
   node:
     build:
@@ -15,7 +14,7 @@ services:
     depends_on:
       - mongo
   mongo:
-    image: mongo:4.0
+    image: mongo:8.0
     volumes:
       - './data-mongodb/:/data/db'
       - './mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro'

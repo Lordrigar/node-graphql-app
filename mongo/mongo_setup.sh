@@ -4,7 +4,7 @@ sleep 10
 
 echo SETUP.sh time now: `date +"%T" `
 echo "Intializing replica set on master"
-docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mongo --eval '
+docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mongosh --eval '
   rs.initiate(
     {
       "_id": "rs0",
@@ -33,7 +33,7 @@ docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mo
 
 sleep 2
 
-docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mongo --eval '
+docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mongosh --eval '
   rs.reconfig(
     {
       "_id": "rs0",
@@ -63,7 +63,7 @@ docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mo
 sleep 10
 
 echo 'setup admin account';
-docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mongo --eval '
+docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mongosh --eval '
 admin = db.getSiblingDB("admin")
 admin.createUser(
   {
@@ -75,7 +75,7 @@ admin.createUser(
 ';
 
 echo 'setup user';
-docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mongo --eval '
+docker exec $(docker ps -qf label=com.docker.swarm.service.name=myapp_mongo1) mongosh --eval '
 db = db.getSiblingDB("mymongo")
 db.createUser(
   {
